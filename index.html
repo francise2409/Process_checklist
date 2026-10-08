@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Feed Endorsement Checklist</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1B2A4A; --navy-light: #2C3E5A; --navy-mid: #354D6B;
+    --teal: #00B4D8; --teal-dark: #0096B4;
+    --green: #2ECC71; --green-bg: #E8F8F0;
+    --amber: #F39C12; --amber-bg: #FEF5E7;
+    --red: #E74C3C; --red-bg: #FDEDEC;
+    --g50: #F8F9FA; --g100: #E9ECEF; --g200: #DEE2E6;
+    --g400: #ADB5BD; --g600: #6C757D; --g800: #343A40;
+    --white: #FFFFFF;
+    --font: 'Segoe UI', Tahoma, Arial, sans-serif;
+    --radius: 6px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  body { font-family: var(--font); background: var(--g50); color: var(--g800); font-size: 13px; line-height: 1.5; }
+
+  /* ── LOGIN ── */
+  .login-overlay { position: fixed; inset: 0; background: var(--navy); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+  .login-overlay.hidden { display: none; }
+  .login-box { background: var(--white); border-radius: 12px; padding: 40px 36px; width: 360px; box-shadow: 0 8px 40px rgba(0,0,0,0.3); text-align: center; }
+  .login-box h1 { font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+  .login-box p { font-size: 12px; color: var(--g600); margin-bottom: 24px; }
+  .login-box .icon { font-size: 40px; margin-bottom: 16px; }
+  .login-input { width: 100%; padding: 10px 14px; border: 2px solid var(--g200); border-radius: var(--radius); font-size: 14px; font-family: var(--font); text-align: center; letter-spacing: 4px; transition: border-color 0.2s; }
+  .login-input:focus { outline: none; border-color: var(--teal); }
+  .login-input.error { border-color: var(--red); animation: shake 0.4s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+  .login-btn { margin-top: 16px; width: 100%; padding: 10px; background: var(--teal); color: var(--white); border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+  .login-btn:hover { background: var(--teal-dark); }
+  .login-error { color: var(--red); font-size: 12px; margin-top: 10px; min-height: 18px; }
+
+  /* ── HEADER ── */
+  .header { background: var(--navy); color: var(--white); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .header h1 { font-size: 16px; font-weight: 600; }
+  .hdr-ctrl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .header select, .header input[type="text"] { padding: 6px 10px; border: 1px solid rgba(255,255,255,0.25); border-radius: var(--radius); background: rgba(255,255,255,0.1); color: var(--white); font-size: 12px; font-family: var(--font); min-width: 160px; }
+  .header select option { color: var(--g800); background: var(--white); }
+  .header input::placeholder { color: rgba(255,255,255,0.45); }
+
+  /* ── TOOLBAR ── */
+  .toolbar { background: var(--white); border-bottom: 1px solid var(--g200); padding: 8px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .tbl, .tbr { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: var(--green-bg); color: #1B7A3D; }
+  .badge-amber { background: var(--amber-bg); color: #9A6700; }
+  .badge-red { background: var(--red-bg); color: #C0392B; }
+
+  .btn { padding: 6px 14px; border: none; border-radius: var(--radius); font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font); display: inline-flex; align-items: center; gap: 4px; }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-secondary { background: var(--g100); color: var(--g800); }
+  .btn-success { background: var(--green); color: var(--white); }
+  .btn-danger { background: var(--red); color: var(--white); }
+  .btn-outline { background: transparent; border: 1px solid var(--g200); color: var(--g600); }
+
+  /* ── TABLE ── */
+  .tw { padding: 12px 24px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; min-width: 1050px; }
+  thead th { background: var(--navy); color: var(--white); padding: 10px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; border-right: 1px solid var(--navy-light); }
+  thead th:last-child { border-right: none; }
+  thead th.ctr { text-align: center; }
+  .sec-row td { background: var(--navy-mid); color: var(--white); font-weight: 700; font-size: 12px; padding: 7px 10px; letter-spacing: 0.3px; text-transform: uppercase; }
+  tbody td { padding: 6px 8px; border-bottom: 1px solid var(--g100); vertical-align: middle; }
+  tbody tr:hover:not(.sec-row) { background: #F0FAFF; }
+  tbody tr.saved { animation: flashG 0.5s ease; }
+  @keyframes flashG { 0%{background:#D5F5E3;} 100%{background:transparent;} }
+  .cn { width: 36px; text-align: center; font-weight: 600; color: var(--g600); font-size: 11px; }
+  .ci { min-width: 230px; font-size: 12px; }
+  .cp { width: 130px; }
+  .cs { width: 105px; }
+  .cc { width: 44px; text-align: center; }
+  .cr { width: 95px; }
+  .cis { min-width: 160px; }
+  td select, td input[type="text"] { width: 100%; padding: 4px 6px; border: 1px solid var(--g200); border-radius: 4px; font-size: 11px; font-family: var(--font); background: var(--white); color: var(--g800); }
+  td select:focus, td input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 2px rgba(0,180,216,0.12); }
+  td input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--teal); }
+  .rh { color: var(--red); font-weight: 700; }
+  .rm { color: var(--amber); font-weight: 600; }
+  .rl { color: var(--green); font-weight: 600; }
+
+  /* ── MODAL ── */
+  .mo { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; }
+  .mo.hidden { display: none; }
+  .md { background: var(--white); border-radius: 10px; padding: 28px; width: 460px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .md h2 { font-size: 15px; color: var(--navy); margin-bottom: 16px; }
+  .md label { font-size: 12px; font-weight: 600; color: var(--g600); display: block; margin-bottom: 4px; }
+  .md textarea { width: 100%; padding: 8px; border: 1px solid var(--g200); border-radius: var(--radius); font-size: 12px; font-family: var(--font); resize: vertical; min-height: 80px; }
+  .md textarea:focus { outline: none; border-color: var(--teal); }
+  .md .hint { font-size: 11px; color: var(--g400); margin-bottom: 14px; }
+  .ma { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 20px; right: 20px; padding: 10px 18px; border-radius: var(--radius); color: var(--white); font-size: 12px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: translateY(60px); opacity: 0; transition: all 0.25s ease; z-index: 999; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .ts { background: #27AE60; } .te { background: var(--red); } .ti { background: var(--teal); }
+
+  .np { text-align: center; padding: 50px 20px; color: var(--g400); }
+  .np h2 { font-size: 15px; margin-bottom: 6px; color: var(--g600); }
+  .footer { padding: 14px 24px; text-align: center; color: var(--g400); font-size: 10px; border-top: 1px solid var(--g100); margin-top: 16px; }
+
+  @media print {
+    .login-overlay, .toolbar, .hdr-ctrl, .footer, .toast, .mo { display: none !important; }
+    .header { background: var(--white) !important; color: var(--navy) !important; border-bottom: 2px solid var(--navy); }
+    table { box-shadow: none; } td select, td input { border: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="LS">
+  <div class="login-box">
+    <div class="icon">🔐</div>
+    <h1>Process Feed Endorsement</h1>
+    <p>Enter password to access checklist</p>
+    <input type="password" class="login-input" id="PI" placeholder="••••••" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Unlock</button>
+    <div class="login-error" id="LE"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="MA" style="display:none;">
+  <div class="header">
+    <h1>📋 Process Feed Endorsement Checklist</h1>
+    <div class="hdr-ctrl">
+      <select id="PS" onchange="onProjChange()"><option value="">— Select Project —</option></select>
+      <input type="text" id="NP" placeholder="New project…" onkeydown="if(event.key==='Enter')addProj()">
+      <button class="btn btn-primary" onclick="addProj()">+ Add</button>
+      <button class="btn btn-outline" onclick="openCfg()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">⚙ Team</button>
+      <button class="btn btn-outline" onclick="expJSON()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">📤 Export</button>
+      <button class="btn btn-outline" onclick="document.getElementById('IF').click()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">📥 Import</button>
+      <input type="file" id="IF" accept=".json" style="display:none" onchange="impJSON(event)">
+    </div>
+  </div>
+
+  <div class="toolbar" id="TB" style="display:none;">
+    <div class="tbl">
+      <span class="badge badge-green" id="bA">✓ 0</span>
+      <span class="badge badge-amber" id="bW">⚠ 0</span>
+      <span class="badge badge-red" id="bH">High: 0</span>
+      <span style="color:var(--g400);font-size:11px;" id="bP">0%</span>
+    </div>
+    <div class="tbr">
+      <button class="btn btn-success" onclick="savePrj()">💾 Save</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨 Print</button>
+      <button class="btn btn-danger" onclick="delPrj()" style="font-size:10px;">🗑</button>
+    </div>
+  </div>
+
+  <div class="tw">
+    <div class="np" id="NM"><h2>Select or create a project</h2><p>Data saved in browser localStorage. Use Export/Import to backup.</p></div>
+    <table id="CT" style="display:none;">
+      <thead><tr>
+        <th class="cn">#</th><th class="ci">Item / Document</th><th class="cp">In Charge</th>
+        <th class="cp">Checker</th><th class="cs">Status</th><th class="cc ctr">✓</th>
+        <th class="cc ctr">⚠</th><th class="cr">Risk Level</th><th class="cis">Issue Summary</th>
+      </tr></thead>
+      <tbody id="CB"></tbody>
+    </table>
+  </div>
+  <div class="footer">Process Feed Endorsement Checklist — Offline · Data in localStorage</div>
+</div>
+
+<!-- CONFIG MODAL -->
+<div class="mo hidden" id="CM">
+  <div class="md">
+    <h2>⚙ Team Configuration</h2>
+    <label>Team Members</label>
+    <textarea id="cM" placeholder="One name per line"></textarea>
+    <div class="hint">Populates In Charge & Checker dropdowns.</div>
+    <label>Projects</label>
+    <textarea id="cP" placeholder="One project per line"></textarea>
+    <div class="hint">You can also add projects from the header.</div>
+    <div class="ma">
+      <button class="btn btn-secondary" onclick="closeCfg()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCfg()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="TT"></div>
+
+<script>
+// ── PASSWORD (SHA-256 of "030201") ──
+const PH="be36a93a686d682913a43a72a7c67110c344babdc1a039b5fcac3f0650e1a97e";
+async function sha256(t){const e=new TextEncoder().encode(t),b=await crypto.subtle.digest("SHA-256",e);return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("");}
+async function doLogin(){const i=document.getElementById("PI"),h=await sha256(i.value);if(h===PH){sessionStorage.setItem("pfe","1");document.getElementById("LS").classList.add("hidden");document.getElementById("MA").style.display="";initApp();}else{i.classList.add("error");document.getElementById("LE").textContent="Incorrect password";setTimeout(()=>i.classList.remove("error"),500);}}
+window.addEventListener("DOMContentLoaded",()=>{if(sessionStorage.getItem("pfe")==="1"){document.getElementById("LS").classList.add("hidden");document.getElementById("MA").style.display="";initApp();}else{document.getElementById("PI").focus();}});
+
+// ── CHECKLIST ITEMS ──
+const SECS=[
+  {s:"Process Basis",items:[{n:1,t:"Process Design Basis (PDB)"},{n:2,t:"Heat & Material Balance (HMB)"},{n:3,t:"Process Flow Diagrams (PFD)"},{n:4,t:"Process Description / Operating Philosophy"}]},
+  {s:"P&ID & Equipment",items:[{n:5,t:"P&IDs — All systems reviewed & approved"},{n:6,t:"Equipment List — Complete & consistent with P&ID"},{n:7,t:"Equipment Datasheets — All issued"},{n:8,t:"Vessel Internals / Separator Design verified"}]},
+  {s:"Instrument & Control",items:[{n:9,t:"Instrument List — Complete"},{n:10,t:"Control Valve Datasheets"},{n:11,t:"PSV Datasheets & Sizing"},{n:12,t:"Cause & Effect Diagram (C&E)"}]},
+  {s:"Line & Piping",items:[{n:13,t:"Line List — Complete"},{n:14,t:"Line Sizing Calculations"},{n:15,t:"Pipe Stress Analysis coordination"}]},
+  {s:"Safety",items:[{n:16,t:"HAZOP / HAZID Close-out"},{n:17,t:"API 14C — SSCSV / SSSV requirements"},{n:18,t:"Blowdown / Depressurization Study"},{n:19,t:"Flare / Vent System Review"},{n:20,t:"Fire & Gas Detection layout"}]},
+  {s:"Utility & Miscellaneous",items:[{n:21,t:"Utility Summary"},{n:22,t:"Chemical Injection Philosophy"},{n:23,t:"Tie-in List"},{n:24,t:"Vendor Package Review (TEG, MRU, etc.)"},{n:25,t:"Plot Plan / Equipment Layout coordination"}]},
+  {s:"Simulation",items:[{n:26,t:"HYSYS Model — Final case validated"},{n:27,t:"Hydraulic Analysis (PIPESIM if applicable)"}]},
+  {s:"Handover",items:[{n:28,t:"IFR / IFA Document Transmittal status"},{n:29,t:"Open Action Items / Punch List"},{n:30,t:"Feed Endorsement Sign-off"}]}
+];
+
+// ── STATE ──
+const SK="pfe_checklist";
+let D={members:[],projects:[],records:{}},CP="",RS={};
+function loadS(){try{const r=localStorage.getItem(SK);if(r)D=JSON.parse(r);}catch(e){}}
+function saveS(){try{localStorage.setItem(SK,JSON.stringify(D));}catch(e){}}
+
+function initApp(){loadS();popProj();}
+
+function popProj(){const s=document.getElementById("PS");s.innerHTML='<option value="">— Select Project —</option>';D.projects.forEach(p=>{const o=document.createElement("option");o.value=p;o.textContent=p;s.appendChild(o);});}
+
+function addProj(){const i=document.getElementById("NP"),nm=i.value.trim();if(!nm)return;if(D.projects.includes(nm)){toast("Project exists","e");return;}D.projects.push(nm);saveS();popProj();document.getElementById("PS").value=nm;i.value="";onProjChange();toast("Added: "+nm,"i");}
+
+function onProjChange(){CP=document.getElementById("PS").value;if(CP){document.getElementById("NM").style.display="none";document.getElementById("CT").style.display="";document.getElementById("TB").style.display="";buildTbl();loadPrj();badges();}else{document.getElementById("NM").style.display="";document.getElementById("CT").style.display="none";document.getElementById("TB").style.display="none";}}
+
+function delPrj(){if(!CP||!confirm('Delete "'+CP+'" and all its data?'))return;D.projects=D.projects.filter(p=>p!==CP);delete D.records[CP];saveS();popProj();CP="";onProjChange();toast("Deleted","i");}
+
+// ── TABLE ──
+function buildTbl(){const b=document.getElementById("CB");b.innerHTML="";RS={};
+SECS.forEach(sec=>{const tr=document.createElement("tr");tr.className="sec-row";tr.innerHTML='<td colspan="9">'+sec.s+'</td>';b.appendChild(tr);
+sec.items.forEach(it=>{const r="r"+it.n;RS[r]={rowId:r,itemNo:it.n,itemDocument:it.t,inCharge:"",checker:"",status:"",approved:false,warning:false,riskLevel:"",issueSummary:""};
+const tr2=document.createElement("tr");tr2.id="tr_"+r;
+tr2.innerHTML='<td class="cn">'+it.n+'</td><td class="ci">'+it.t+'</td><td class="cp">'+pSel(r,"inCharge")+'</td><td class="cp">'+pSel(r,"checker")+'</td><td class="cs"><select id="'+r+'_st" onchange="oF(\''+r+'\',\'status\',this.value)"><option value="">—</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="On Hold">On Hold</option><option value="N/A">N/A</option></select></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_ap" onchange="oC(\''+r+'\',\'approved\',this.checked)"></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_wn" onchange="oC(\''+r+'\',\'warning\',this.checked)"></td><td class="cr"><select id="'+r+'_rl" onchange="oF(\''+r+'\',\'riskLevel\',this.value)"><option value="">—</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td><td class="cis"><input type="text" id="'+r+'_is" placeholder="…" onchange="oF(\''+r+'\',\'issueSummary\',this.value)"></td>';
+b.appendChild(tr2);});});}
+
+function pSel(r,f){let h='<select id="'+r+'_'+f+'" onchange="oF(\''+r+'\',\''+f+'\',this.value)"><option value="">—</option>';D.members.forEach(m=>{h+='<option value="'+m+'">'+m+'</option>';});return h+'</select>';}
+
+// ── EVENTS ──
+function oF(r,f,v){RS[r][f]=v;if(f==="riskLevel")rStyle(r);}
+function oC(r,f,c){RS[r][f]=c;badges();savePrj(true);}
+function rStyle(r){const e=document.getElementById(r+"_rl");if(!e)return;e.className="";const v=RS[r].riskLevel;if(v==="High")e.classList.add("rh");if(v==="Medium")e.classList.add("rm");if(v==="Low")e.classList.add("rl");}
+function badges(){const v=Object.values(RS),a=v.filter(s=>s.approved).length,w=v.filter(s=>s.warning).length,h=v.filter(s=>s.riskLevel==="High").length,p=v.length?Math.round(a/v.length*100):0;
+document.getElementById("bA").textContent="✓ "+a;document.getElementById("bW").textContent="⚠ "+w;document.getElementById("bH").textContent="High: "+h;document.getElementById("bP").textContent=p+"% complete";}
+
+// ── SAVE / LOAD ──
+function savePrj(silent){if(!CP)return;D.records[CP]={savedAt:new Date().toISOString(),rows:JSON.parse(JSON.stringify(RS))};saveS();if(!silent)toast("Saved ✓","s");}
+function loadPrj(){const rec=D.records[CP];if(!rec||!rec.rows)return;Object.keys(rec.rows).forEach(r=>{const d=rec.rows[r];if(!RS[r])return;RS[r]={...RS[r],...d};sV(r+"_inCharge",d.inCharge);sV(r+"_checker",d.checker);sV(r+"_st",d.status);sC(r+"_ap",d.approved);sC(r+"_wn",d.warning);sV(r+"_rl",d.riskLevel);sI(r+"_is",d.issueSummary);rStyle(r);});}
+
+// ── CONFIG ──
+function openCfg(){document.getElementById("cM").value=D.members.join("\n");document.getElementById("cP").value=D.projects.join("\n");document.getElementById("CM").classList.remove("hidden");}
+function closeCfg(){document.getElementById("CM").classList.add("hidden");}
+function saveCfg(){D.members=document.getElementById("cM").value.split("\n").map(s=>s.trim()).filter(Boolean);D.projects=document.getElementById("cP").value.split("\n").map(s=>s.trim()).filter(Boolean);saveS();popProj();closeCfg();if(CP){buildTbl();loadPrj();badges();}toast("Config saved","s");}
+
+// ── EXPORT / IMPORT ──
+function expJSON(){const b=new Blob([JSON.stringify(D,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="PFE_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(u);toast("Exported ✓","s");}
+function impJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const im=JSON.parse(e.target.result);if(!im.records){toast("Invalid file","e");return;}D.members=[...new Set([...D.members,...(im.members||[])])];D.projects=[...new Set([...D.projects,...(im.projects||[])])];Object.keys(im.records).forEach(p=>{if(!D.records[p])D.records[p]=im.records[p];});saveS();popProj();toast("Imported ✓","s");}catch(err){toast("Error: "+err.message,"e");}};rd.readAsText(f);ev.target.value="";}
+
+// ── HELPERS ──
+function sV(id,v){const e=document.getElementById(id);if(e)e.value=v||"";}
+function sI(id,v){const e=document.getElementById(id);if(e)e.value=v||"";}
+function sC(id,v){const e=document.getElementById(id);if(e)e.checked=!!v;}
+function toast(m,t){const e=document.getElementById("TT");e.textContent=m;e.className="toast "+(t==="s"?"ts":t==="e"?"te":"ti")+" show";setTimeout(()=>e.classList.remove("show"),2200);}
+</script>
+</body>
+</html>
