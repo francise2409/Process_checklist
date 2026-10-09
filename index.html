@@ -59,31 +59,39 @@
   .btn-success { background: var(--green); color: var(--white); }
   .btn-danger { background: var(--red); color: var(--white); }
   .btn-outline { background: transparent; border: 1px solid var(--g200); color: var(--g600); }
+  .btn-excel { background: #217346; color: var(--white); }
 
   /* ── TABLE ── */
   .tw { padding: 12px 24px; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; min-width: 1050px; }
+  table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; min-width: 1100px; }
   thead th { background: var(--navy); color: var(--white); padding: 10px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; border-right: 1px solid var(--navy-light); }
   thead th:last-child { border-right: none; }
   thead th.ctr { text-align: center; }
   .sec-row td { background: var(--navy-mid); color: var(--white); font-weight: 700; font-size: 12px; padding: 7px 10px; letter-spacing: 0.3px; text-transform: uppercase; }
+  .sec-row .add-row-cell { text-align: right; padding-right: 12px; }
+  .sec-row .btn-add-row { background: rgba(255,255,255,0.15); color: var(--white); border: 1px solid rgba(255,255,255,0.3); padding: 2px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; font-family: var(--font); font-weight: 600; }
+  .sec-row .btn-add-row:hover { background: rgba(255,255,255,0.3); }
   tbody td { padding: 6px 8px; border-bottom: 1px solid var(--g100); vertical-align: middle; }
   tbody tr:hover:not(.sec-row) { background: #F0FAFF; }
   tbody tr.saved { animation: flashG 0.5s ease; }
   @keyframes flashG { 0%{background:#D5F5E3;} 100%{background:transparent;} }
   .cn { width: 36px; text-align: center; font-weight: 600; color: var(--g600); font-size: 11px; }
-  .ci { min-width: 230px; font-size: 12px; }
+  .ci { min-width: 200px; font-size: 12px; }
   .cp { width: 130px; }
   .cs { width: 105px; }
   .cc { width: 44px; text-align: center; }
   .cr { width: 95px; }
-  .cis { min-width: 160px; }
+  .cis { min-width: 140px; }
+  .cx { width: 32px; text-align: center; }
   td select, td input[type="text"] { width: 100%; padding: 4px 6px; border: 1px solid var(--g200); border-radius: 4px; font-size: 11px; font-family: var(--font); background: var(--white); color: var(--g800); }
   td select:focus, td input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 2px rgba(0,180,216,0.12); }
   td input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--teal); }
   .rh { color: var(--red); font-weight: 700; }
   .rm { color: var(--amber); font-weight: 600; }
   .rl { color: var(--green); font-weight: 600; }
+  .btn-del-row { background: none; border: none; color: var(--g400); cursor: pointer; font-size: 14px; padding: 2px; line-height: 1; }
+  .btn-del-row:hover { color: var(--red); }
+  .custom-item-input { border: 1px dashed var(--teal) !important; background: #F0FAFF !important; }
 
   /* ── MODAL ── */
   .mo { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; }
@@ -106,7 +114,7 @@
   .footer { padding: 14px 24px; text-align: center; color: var(--g400); font-size: 10px; border-top: 1px solid var(--g100); margin-top: 16px; }
 
   @media print {
-    .login-overlay, .toolbar, .hdr-ctrl, .footer, .toast, .mo { display: none !important; }
+    .login-overlay, .toolbar, .hdr-ctrl, .footer, .toast, .mo, .btn-del-row, .btn-add-row { display: none !important; }
     .header { background: var(--white) !important; color: var(--navy) !important; border-bottom: 2px solid var(--navy); }
     table { box-shadow: none; } td select, td input { border: none; }
   }
@@ -135,7 +143,7 @@
       <input type="text" id="NP" placeholder="New project…" onkeydown="if(event.key==='Enter')addProj()">
       <button class="btn btn-primary" onclick="addProj()">+ Add</button>
       <button class="btn btn-outline" onclick="openCfg()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">⚙ Team</button>
-      <button class="btn btn-outline" onclick="expJSON()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">📤 Export</button>
+      <button class="btn btn-outline" onclick="expJSON()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">📤 JSON</button>
       <button class="btn btn-outline" onclick="document.getElementById('IF').click()" style="color:var(--white);border-color:rgba(255,255,255,0.3);">📥 Import</button>
       <input type="file" id="IF" accept=".json" style="display:none" onchange="impJSON(event)">
     </div>
@@ -149,6 +157,7 @@
       <span style="color:var(--g400);font-size:11px;" id="bP">0%</span>
     </div>
     <div class="tbr">
+      <button class="btn btn-excel" onclick="expExcel()">📊 Excel</button>
       <button class="btn btn-success" onclick="savePrj()">💾 Save</button>
       <button class="btn btn-secondary" onclick="window.print()">🖨 Print</button>
       <button class="btn btn-danger" onclick="delPrj()" style="font-size:10px;">🗑</button>
@@ -162,6 +171,7 @@
         <th class="cn">#</th><th class="ci">Item / Document</th><th class="cp">In Charge</th>
         <th class="cp">Checker</th><th class="cs">Status</th><th class="cc ctr">✓</th>
         <th class="cc ctr">⚠</th><th class="cr">Risk Level</th><th class="cis">Issue Summary</th>
+        <th class="cx"></th>
       </tr></thead>
       <tbody id="CB"></tbody>
     </table>
@@ -195,22 +205,23 @@ async function sha256(t){const e=new TextEncoder().encode(t),b=await crypto.subt
 async function doLogin(){const i=document.getElementById("PI"),h=await sha256(i.value);if(h===PH){sessionStorage.setItem("pfe","1");document.getElementById("LS").classList.add("hidden");document.getElementById("MA").style.display="";initApp();}else{i.classList.add("error");document.getElementById("LE").textContent="Incorrect password";setTimeout(()=>i.classList.remove("error"),500);}}
 window.addEventListener("DOMContentLoaded",()=>{if(sessionStorage.getItem("pfe")==="1"){document.getElementById("LS").classList.add("hidden");document.getElementById("MA").style.display="";initApp();}else{document.getElementById("PI").focus();}});
 
-// ── CHECKLIST ITEMS ──
+// ── CHECKLIST SECTIONS (default items) ──
 const SECS=[
-  {s:"Process Basis",items:[{n:1,t:"Process Design Basis (PDB)"},{n:2,t:"Heat & Material Balance (HMB)"},{n:3,t:"Process Flow Diagrams (PFD)"},{n:4,t:"Process Description / Operating Philosophy"}]},
-  {s:"P&ID & Equipment",items:[{n:5,t:"P&IDs — All systems reviewed & approved"},{n:6,t:"Equipment List — Complete & consistent with P&ID"},{n:7,t:"Equipment Datasheets — All issued"},{n:8,t:"Vessel Internals / Separator Design verified"}]},
-  {s:"Instrument & Control",items:[{n:9,t:"Instrument List — Complete"},{n:10,t:"Control Valve Datasheets"},{n:11,t:"PSV Datasheets & Sizing"},{n:12,t:"Cause & Effect Diagram (C&E)"}]},
-  {s:"Line & Piping",items:[{n:13,t:"Line List — Complete"},{n:14,t:"Line Sizing Calculations"},{n:15,t:"Pipe Stress Analysis coordination"}]},
-  {s:"Safety",items:[{n:16,t:"HAZOP / HAZID Close-out"},{n:17,t:"API 14C — SSCSV / SSSV requirements"},{n:18,t:"Blowdown / Depressurization Study"},{n:19,t:"Flare / Vent System Review"},{n:20,t:"Fire & Gas Detection layout"}]},
-  {s:"Utility & Miscellaneous",items:[{n:21,t:"Utility Summary"},{n:22,t:"Chemical Injection Philosophy"},{n:23,t:"Tie-in List"},{n:24,t:"Vendor Package Review (TEG, MRU, etc.)"},{n:25,t:"Plot Plan / Equipment Layout coordination"}]},
-  {s:"Simulation",items:[{n:26,t:"HYSYS Model — Final case validated"},{n:27,t:"Hydraulic Analysis (PIPESIM if applicable)"}]},
-  {s:"Handover",items:[{n:28,t:"IFR / IFA Document Transmittal status"},{n:29,t:"Open Action Items / Punch List"},{n:30,t:"Feed Endorsement Sign-off"}]}
+  {s:"Process Basis",id:"sec0",items:[{n:1,t:"Process Design Basis (PDB)"},{n:2,t:"Heat & Material Balance (HMB)"},{n:3,t:"Process Flow Diagrams (PFD)"},{n:4,t:"Process Description / Operating Philosophy"}]},
+  {s:"P&ID & Equipment",id:"sec1",items:[{n:5,t:"P&IDs — All systems reviewed & approved"},{n:6,t:"Equipment List — Complete & consistent with P&ID"},{n:7,t:"Equipment Datasheets — All issued"},{n:8,t:"Vessel Internals / Separator Design verified"}]},
+  {s:"Instrument & Control",id:"sec2",items:[{n:9,t:"Instrument List — Complete"},{n:10,t:"Control Valve Datasheets"},{n:11,t:"PSV Datasheets & Sizing"},{n:12,t:"Cause & Effect Diagram (C&E)"}]},
+  {s:"Line & Piping",id:"sec3",items:[{n:13,t:"Line List — Complete"},{n:14,t:"Line Sizing Calculations"},{n:15,t:"Pipe Stress Analysis coordination"}]},
+  {s:"Safety",id:"sec4",items:[{n:16,t:"HAZOP / HAZID Close-out"},{n:17,t:"API 14C — SSCSV / SSSV requirements"},{n:18,t:"Blowdown / Depressurization Study"},{n:19,t:"Flare / Vent System Review"},{n:20,t:"Fire & Gas Detection layout"}]},
+  {s:"Utility & Miscellaneous",id:"sec5",items:[{n:21,t:"Utility Summary"},{n:22,t:"Chemical Injection Philosophy"},{n:23,t:"Tie-in List"},{n:24,t:"Vendor Package Review (TEG, MRU, etc.)"},{n:25,t:"Plot Plan / Equipment Layout coordination"}]},
+  {s:"Simulation",id:"sec6",items:[{n:26,t:"HYSYS Model — Final case validated"},{n:27,t:"Hydraulic Analysis (PIPESIM if applicable)"}]},
+  {s:"Handover",id:"sec7",items:[{n:28,t:"IFR / IFA Document Transmittal status"},{n:29,t:"Open Action Items / Punch List"},{n:30,t:"Feed Endorsement Sign-off"}]}
 ];
 
 // ── STATE ──
 const SK="pfe_checklist";
-let D={members:[],projects:[],records:{}},CP="",RS={};
-function loadS(){try{const r=localStorage.getItem(SK);if(r)D=JSON.parse(r);}catch(e){}}
+let D={members:[],projects:[],records:{},customItems:{}},CP="",RS={};
+let nextNum=31; // next item number for custom rows
+function loadS(){try{const r=localStorage.getItem(SK);if(r){const p=JSON.parse(r);D={...D,...p};if(!D.customItems)D.customItems={};}}catch(e){}}
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(D));}catch(e){}}
 
 function initApp(){loadS();popProj();}
@@ -221,17 +232,88 @@ function addProj(){const i=document.getElementById("NP"),nm=i.value.trim();if(!n
 
 function onProjChange(){CP=document.getElementById("PS").value;if(CP){document.getElementById("NM").style.display="none";document.getElementById("CT").style.display="";document.getElementById("TB").style.display="";buildTbl();loadPrj();badges();}else{document.getElementById("NM").style.display="";document.getElementById("CT").style.display="none";document.getElementById("TB").style.display="none";}}
 
-function delPrj(){if(!CP||!confirm('Delete "'+CP+'" and all its data?'))return;D.projects=D.projects.filter(p=>p!==CP);delete D.records[CP];saveS();popProj();CP="";onProjChange();toast("Deleted","i");}
+function delPrj(){if(!CP||!confirm('Delete "'+CP+'" and all its data?'))return;D.projects=D.projects.filter(p=>p!==CP);delete D.records[CP];delete D.customItems[CP];saveS();popProj();CP="";onProjChange();toast("Deleted","i");}
+
+// ── GET CUSTOM ITEMS FOR CURRENT PROJECT + SECTION ──
+function getCustom(secId){if(!CP||!D.customItems[CP])return[];return(D.customItems[CP][secId]||[]);}
+function saveCustom(secId,items){if(!D.customItems[CP])D.customItems[CP]={};D.customItems[CP][secId]=items;saveS();}
 
 // ── TABLE ──
-function buildTbl(){const b=document.getElementById("CB");b.innerHTML="";RS={};
-SECS.forEach(sec=>{const tr=document.createElement("tr");tr.className="sec-row";tr.innerHTML='<td colspan="9">'+sec.s+'</td>';b.appendChild(tr);
-sec.items.forEach(it=>{const r="r"+it.n;RS[r]={rowId:r,itemNo:it.n,itemDocument:it.t,inCharge:"",checker:"",status:"",approved:false,warning:false,riskLevel:"",issueSummary:""};
-const tr2=document.createElement("tr");tr2.id="tr_"+r;
-tr2.innerHTML='<td class="cn">'+it.n+'</td><td class="ci">'+it.t+'</td><td class="cp">'+pSel(r,"inCharge")+'</td><td class="cp">'+pSel(r,"checker")+'</td><td class="cs"><select id="'+r+'_st" onchange="oF(\''+r+'\',\'status\',this.value)"><option value="">—</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="On Hold">On Hold</option><option value="N/A">N/A</option></select></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_ap" onchange="oC(\''+r+'\',\'approved\',this.checked)"></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_wn" onchange="oC(\''+r+'\',\'warning\',this.checked)"></td><td class="cr"><select id="'+r+'_rl" onchange="oF(\''+r+'\',\'riskLevel\',this.value)"><option value="">—</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td><td class="cis"><input type="text" id="'+r+'_is" placeholder="…" onchange="oF(\''+r+'\',\'issueSummary\',this.value)"></td>';
-b.appendChild(tr2);});});}
+function buildTbl(){
+  const b=document.getElementById("CB");b.innerHTML="";RS={};
+  // find max item number across default + custom
+  nextNum=31;
+  if(CP&&D.customItems[CP]){Object.values(D.customItems[CP]).forEach(arr=>{arr.forEach(ci=>{if(ci.n>=nextNum)nextNum=ci.n+1;});});}
 
-function pSel(r,f){let h='<select id="'+r+'_'+f+'" onchange="oF(\''+r+'\',\''+f+'\',this.value)"><option value="">—</option>';D.members.forEach(m=>{h+='<option value="'+m+'">'+m+'</option>';});return h+'</select>';}
+  SECS.forEach((sec,si)=>{
+    // section header row with + button
+    const tr=document.createElement("tr");tr.className="sec-row";tr.id="secrow_"+sec.id;
+    tr.innerHTML='<td colspan="9">'+sec.s+'</td><td class="add-row-cell"><button class="btn-add-row" onclick="addRow(\''+sec.id+'\','+si+')" title="Add item to this section">+ Add Row</button></td>';
+    b.appendChild(tr);
+
+    // default items
+    sec.items.forEach(it=>{
+      addItemRow(b,it.n,it.t,"r"+it.n,false,sec.id);
+    });
+
+    // custom items for this section
+    const customs=getCustom(sec.id);
+    customs.forEach(ci=>{
+      addItemRow(b,ci.n,ci.t,"r"+ci.n,true,sec.id);
+    });
+  });
+}
+
+function addItemRow(parent,num,text,r,isCustom,secId){
+  RS[r]={rowId:r,itemNo:num,itemDocument:text,inCharge:"",checker:"",status:"",approved:false,warning:false,riskLevel:"",issueSummary:"",custom:isCustom,secId:secId};
+  const tr2=document.createElement("tr");tr2.id="tr_"+r;
+  const itemCell=isCustom?'<input type="text" class="custom-item-input" value="'+escH(text)+'" onchange="renameItem(\''+r+'\',this.value)" placeholder="Enter item name…">':escH(text);
+  const delCell=isCustom?'<button class="btn-del-row" onclick="delRow(\''+r+'\')" title="Remove">✕</button>':'';
+  tr2.innerHTML='<td class="cn">'+num+'</td><td class="ci">'+itemCell+'</td><td class="cp">'+pSel(r,"inCharge")+'</td><td class="cp">'+pSel(r,"checker")+'</td><td class="cs"><select id="'+r+'_st" onchange="oF(\''+r+'\',\'status\',this.value)"><option value="">—</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Done">Done</option><option value="On Hold">On Hold</option><option value="N/A">N/A</option></select></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_ap" onchange="oC(\''+r+'\',\'approved\',this.checked)"></td><td class="cc" style="text-align:center"><input type="checkbox" id="'+r+'_wn" onchange="oC(\''+r+'\',\'warning\',this.checked)"></td><td class="cr"><select id="'+r+'_rl" onchange="oF(\''+r+'\',\'riskLevel\',this.value)"><option value="">—</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td><td class="cis"><input type="text" id="'+r+'_is" placeholder="…" onchange="oF(\''+r+'\',\'issueSummary\',this.value)"></td><td class="cx">'+delCell+'</td>';
+  parent.appendChild(tr2);
+}
+
+function escH(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+// ── ADD / DELETE / RENAME CUSTOM ROW ──
+function addRow(secId,secIdx){
+  if(!CP){toast("Select a project first","e");return;}
+  const num=nextNum++;
+  const customs=getCustom(secId);
+  customs.push({n:num,t:"(new item)"});
+  saveCustom(secId,customs);
+  // rebuild and reload
+  buildTbl();loadPrj();badges();
+  // focus the new input
+  setTimeout(()=>{const inp=document.querySelector("#tr_r"+num+" .custom-item-input");if(inp){inp.focus();inp.select();}},50);
+  toast("Row #"+num+" added","i");
+}
+
+function delRow(r){
+  const row=RS[r];if(!row||!row.custom)return;
+  if(!confirm("Remove item #"+row.itemNo+"?"))return;
+  const customs=getCustom(row.secId);
+  const idx=customs.findIndex(c=>c.n===row.itemNo);
+  if(idx>=0)customs.splice(idx,1);
+  saveCustom(row.secId,customs);
+  delete RS[r];
+  // also remove from saved records
+  if(D.records[CP]&&D.records[CP].rows&&D.records[CP].rows[r]){delete D.records[CP].rows[r];saveS();}
+  buildTbl();loadPrj();badges();
+  toast("Removed #"+row.itemNo,"i");
+}
+
+function renameItem(r,val){
+  if(!RS[r])return;
+  RS[r].itemDocument=val;
+  // update custom items list
+  const customs=getCustom(RS[r].secId);
+  const ci=customs.find(c=>c.n===RS[r].itemNo);
+  if(ci)ci.t=val;
+  saveCustom(RS[r].secId,customs);
+}
+
+function pSel(r,f){let h='<select id="'+r+'_'+f+'" onchange="oF(\''+r+'\',\''+f+'\',this.value)"><option value="">—</option>';D.members.forEach(m=>{h+='<option value="'+escH(m)+'">'+escH(m)+'</option>';});return h+'</select>';}
 
 // ── EVENTS ──
 function oF(r,f,v){RS[r][f]=v;if(f==="riskLevel")rStyle(r);}
@@ -249,9 +331,99 @@ function openCfg(){document.getElementById("cM").value=D.members.join("\n");docu
 function closeCfg(){document.getElementById("CM").classList.add("hidden");}
 function saveCfg(){D.members=document.getElementById("cM").value.split("\n").map(s=>s.trim()).filter(Boolean);D.projects=document.getElementById("cP").value.split("\n").map(s=>s.trim()).filter(Boolean);saveS();popProj();closeCfg();if(CP){buildTbl();loadPrj();badges();}toast("Config saved","s");}
 
-// ── EXPORT / IMPORT ──
-function expJSON(){const b=new Blob([JSON.stringify(D,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="PFE_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(u);toast("Exported ✓","s");}
-function impJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const im=JSON.parse(e.target.result);if(!im.records){toast("Invalid file","e");return;}D.members=[...new Set([...D.members,...(im.members||[])])];D.projects=[...new Set([...D.projects,...(im.projects||[])])];Object.keys(im.records).forEach(p=>{if(!D.records[p])D.records[p]=im.records[p];});saveS();popProj();toast("Imported ✓","s");}catch(err){toast("Error: "+err.message,"e");}};rd.readAsText(f);ev.target.value="";}
+// ── EXPORT JSON ──
+function expJSON(){const b=new Blob([JSON.stringify(D,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="PFE_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(u);toast("JSON exported ✓","s");}
+
+// ── IMPORT JSON ──
+function impJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const im=JSON.parse(e.target.result);if(!im.records){toast("Invalid file","e");return;}D.members=[...new Set([...D.members,...(im.members||[])])];D.projects=[...new Set([...D.projects,...(im.projects||[])])];Object.keys(im.records).forEach(p=>{if(!D.records[p])D.records[p]=im.records[p];});if(im.customItems){if(!D.customItems)D.customItems={};Object.keys(im.customItems).forEach(p=>{if(!D.customItems[p])D.customItems[p]=im.customItems[p];});}saveS();popProj();toast("Imported ✓","s");}catch(err){toast("Error: "+err.message,"e");}};rd.readAsText(f);ev.target.value="";}
+
+// ── EXPORT EXCEL ──
+function expExcel(){
+  if(!CP){toast("Select a project first","e");return;}
+  // Build section lookup
+  const secMap={};
+  SECS.forEach(sec=>{sec.items.forEach(it=>{secMap[it.n]=sec.s;});
+    const customs=getCustom(sec.id);customs.forEach(ci=>{secMap[ci.n]=sec.s;});});
+
+  // Collect rows sorted by itemNo
+  const rows=Object.values(RS).sort((a,b)=>a.itemNo-b.itemNo);
+  const now=new Date().toISOString().slice(0,19).replace("T"," ");
+
+  // Build XML Spreadsheet (Excel 2003 XML — opens natively in Excel, no library needed)
+  let xml='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n';
+  xml+='<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n';
+  xml+=' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+
+  // Styles
+  xml+='<Styles>\n';
+  xml+='<Style ss:ID="Default"><Font ss:FontName="Tahoma" ss:Size="11"/></Style>\n';
+  xml+='<Style ss:ID="hdr"><Font ss:FontName="Tahoma" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#1B2A4A" ss:Pattern="Solid"/><Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#FFFFFF"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#FFFFFF"/></Borders></Style>\n';
+  xml+='<Style ss:ID="sec"><Font ss:FontName="Tahoma" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#354D6B" ss:Pattern="Solid"/></Style>\n';
+  xml+='<Style ss:ID="data"><Font ss:FontName="Tahoma" ss:Size="10"/><Alignment ss:Vertical="Center" ss:WrapText="1"/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#DEE2E6"/></Borders></Style>\n';
+  xml+='<Style ss:ID="yes"><Font ss:FontName="Tahoma" ss:Size="10" ss:Bold="1" ss:Color="#2ECC71"/><Alignment ss:Horizontal="Center" ss:Vertical="Center"/></Style>\n';
+  xml+='<Style ss:ID="no"><Font ss:FontName="Tahoma" ss:Size="10" ss:Color="#ADB5BD"/><Alignment ss:Horizontal="Center" ss:Vertical="Center"/></Style>\n';
+  xml+='<Style ss:ID="rH"><Font ss:FontName="Tahoma" ss:Size="10" ss:Bold="1" ss:Color="#E74C3C"/><Alignment ss:Horizontal="Center" ss:Vertical="Center"/></Style>\n';
+  xml+='<Style ss:ID="rM"><Font ss:FontName="Tahoma" ss:Size="10" ss:Bold="1" ss:Color="#F39C12"/><Alignment ss:Horizontal="Center" ss:Vertical="Center"/></Style>\n';
+  xml+='<Style ss:ID="rL"><Font ss:FontName="Tahoma" ss:Size="10" ss:Bold="1" ss:Color="#2ECC71"/><Alignment ss:Horizontal="Center" ss:Vertical="Center"/></Style>\n';
+  xml+='<Style ss:ID="title"><Font ss:FontName="Tahoma" ss:Size="14" ss:Bold="1" ss:Color="#1B2A4A"/></Style>\n';
+  xml+='<Style ss:ID="info"><Font ss:FontName="Tahoma" ss:Size="10" ss:Color="#6C757D"/></Style>\n';
+  xml+='</Styles>\n';
+
+  xml+='<Worksheet ss:Name="'+escXml(CP.substring(0,31))+'">\n<Table>\n';
+
+  // Column widths
+  xml+='<Column ss:Width="40"/><Column ss:Width="300"/><Column ss:Width="120"/><Column ss:Width="120"/><Column ss:Width="100"/><Column ss:Width="70"/><Column ss:Width="70"/><Column ss:Width="90"/><Column ss:Width="200"/>\n';
+
+  // Title rows
+  xml+='<Row><Cell ss:StyleID="title"><Data ss:Type="String">Process Feed Endorsement Checklist</Data></Cell></Row>\n';
+  xml+='<Row><Cell ss:StyleID="info"><Data ss:Type="String">Project: '+escXml(CP)+'</Data></Cell><Cell/><Cell/><Cell ss:StyleID="info"><Data ss:Type="String">Exported: '+now+'</Data></Cell></Row>\n';
+  xml+='<Row></Row>\n';
+
+  // Header
+  const hdrs=["#","Item / Document","In Charge","Checker","Status","Approved","Warning","Risk Level","Issue Summary"];
+  xml+='<Row ss:Height="30">';hdrs.forEach(h=>{xml+='<Cell ss:StyleID="hdr"><Data ss:Type="String">'+escXml(h)+'</Data></Cell>';});xml+='</Row>\n';
+
+  // Data rows with section headers
+  let lastSec="";
+  rows.forEach(r=>{
+    const sec=secMap[r.itemNo]||"";
+    if(sec!==lastSec){
+      xml+='<Row><Cell ss:StyleID="sec" ss:MergeAcross="8"><Data ss:Type="String">'+escXml(sec)+'</Data></Cell></Row>\n';
+      lastSec=sec;
+    }
+    const apS=r.approved?"yes":"data", wnS=r.warning?"yes":"no";
+    const rlS=r.riskLevel==="High"?"rH":r.riskLevel==="Medium"?"rM":r.riskLevel==="Low"?"rL":"data";
+    xml+='<Row>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="Number">'+r.itemNo+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="String">'+escXml(r.itemDocument)+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="String">'+escXml(r.inCharge||"")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="String">'+escXml(r.checker||"")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="String">'+escXml(r.status||"")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="'+apS+'"><Data ss:Type="String">'+(r.approved?"YES":"—")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="'+(r.warning?"yes":"no")+'"><Data ss:Type="String">'+(r.warning?"YES":"—")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="'+rlS+'"><Data ss:Type="String">'+escXml(r.riskLevel||"—")+'</Data></Cell>';
+    xml+='<Cell ss:StyleID="data"><Data ss:Type="String">'+escXml(r.issueSummary||"")+'</Data></Cell>';
+    xml+='</Row>\n';
+  });
+
+  // Summary row
+  const tot=rows.length,apCnt=rows.filter(r=>r.approved).length,wnCnt=rows.filter(r=>r.warning).length,hiCnt=rows.filter(r=>r.riskLevel==="High").length;
+  xml+='<Row></Row>\n';
+  xml+='<Row><Cell ss:StyleID="info"><Data ss:Type="String">Summary</Data></Cell><Cell/><Cell/><Cell/><Cell ss:StyleID="info"><Data ss:Type="String">Total: '+tot+'</Data></Cell><Cell ss:StyleID="info"><Data ss:Type="String">Approved: '+apCnt+'</Data></Cell><Cell ss:StyleID="info"><Data ss:Type="String">Warnings: '+wnCnt+'</Data></Cell><Cell ss:StyleID="info"><Data ss:Type="String">High Risk: '+hiCnt+'</Data></Cell><Cell ss:StyleID="info"><Data ss:Type="String">Completion: '+(tot?Math.round(apCnt/tot*100):0)+'%</Data></Cell></Row>\n';
+
+  xml+='</Table>\n</Worksheet>\n</Workbook>';
+
+  const blob=new Blob([xml],{type:"application/vnd.ms-excel"});
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=u;
+  a.download="PFE_"+CP.replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+new Date().toISOString().slice(0,10)+".xls";
+  a.click();
+  URL.revokeObjectURL(u);
+  toast("Excel exported ✓","s");
+}
+
+function escXml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
 // ── HELPERS ──
 function sV(id,v){const e=document.getElementById(id);if(e)e.value=v||"";}
